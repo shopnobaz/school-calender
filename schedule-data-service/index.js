@@ -113,9 +113,55 @@ server.post('/data/generate-schedule', generateSchedule)
 
 // generic one-to-one table API
 
-server.get('/data/:table', (req, res)=>{ // but limit which tables to query with ACL
+server.get('/data/:table', (req, res) => { // but limit which tables to query with ACL
   let query = "SELECT * FROM " + req.params.table
   let result = db.prepare(query).all()
   setResultHeaders(res, result)
+  res.json(result)
+})
+
+server.get('/data/:table/:id', (req, res) => { // but limit which tables to query with ACL
+  let query = "SELECT * FROM " + req.params.table + ' WHERE id = @id'
+  let result = db.prepare(query).all(req.params)
+  setResultHeaders(res, result[0])
+  res.json(result[0])
+})
+
+server.post('/data/:table', (req, res) => { // limit which tables to query with ACL
+  let query = `INSERT INTO ${req.params.table} (${Object.keys(req.body).join(', ')}) VALUES(@${Object.keys(req.body).join(', @')})`
+  let result
+  try {
+    result = db.prepare(query).run(req.body)
+  } catch (e) {
+    console.error(e)
+  }
+  res.json(result)
+})
+
+server.put('/data/:table/:id', (req, res) => { // limit which tables to query with ACL
+  req.body.id = req.params.id // move/replace the id into the body so it can be passed with the other replacements
+  let query = `UPDATE ${req.params.table} SET`
+  for (let key of Object.keys(req.body)) {
+    query += ` ${key}=@${key},`
+  }
+  query = query.replace(/\,$/, '')
+  query += ` WHERE id = @id`
+  let result
+  try {
+    result = db.prepare(query).run(req.body)
+  } catch (e) {
+    console.error(e)
+  }
+  res.json(result)
+})
+
+server.delete('/data/:table/:id', (req, res) => {
+  let query = "DELETE FROM " + req.params.table + " WHERE id = @id"
+  let result
+  try {
+    result = db.prepare(query).run({ id: req.params.id })
+  } catch (e) {
+    console.error(e)
+  }
   res.json(result)
 })
