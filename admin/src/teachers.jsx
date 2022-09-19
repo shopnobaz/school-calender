@@ -45,7 +45,7 @@ export const TeacherEdit = () => (
       <TextInput source="lastname" />
       <TextInput source="initials" />
       <TextInput source="phone" />
-      <TextInput source="email" />
+      <TextInput label="Email Address" source="email" type="email" />
       <TextInput source="color" />
       <BooleanInput label="hide" source="hide" defaultValue={0} />
 
