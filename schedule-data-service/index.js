@@ -43,12 +43,8 @@ server.use('/admin', express.static('../admin/dist'))
 server.use('/assets', express.static('../admin/dist/assets'))
 
 // REST API routes
-
-require('./routes/courses.js')(server, db)
 require('./routes/teachers.js')(server, db)
 require('./routes/login.js')(server, db)
-require('./routes/schools.js')(server, db)
-
 
 const apiDescription = require('./api-description.js')(host)
 
