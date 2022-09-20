@@ -4,7 +4,7 @@ const setResultHeaders = require("../modules/set-result-headers");
 module.exports = function (server, db) {
 
   server.get('/data/teachers', (req, res) => {
-    let query = "SELECT id, firstname, lastname, initials, phone, email, color, hide  FROM teachers ORDER BY initials"
+    let query = "SELECT id, firstname, lastname, initials, phone, email, color, hide  FROM teachers ORDER BY id"
     let result = db.prepare(query).all()
     setResultHeaders(res, result)
     res.json(result)
