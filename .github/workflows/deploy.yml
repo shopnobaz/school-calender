@@ -1,7 +1,7 @@
 name: Deploy dev
 on: 
   push:
-    branches: [main]
+    branches: [master]
 jobs:
 
   api-test:
