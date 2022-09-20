@@ -1,0 +1,67 @@
+name: AWS deploy
+on:
+  push:
+    branches: [dev]
+ 
+jobs:
+
+  api-test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+ 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    # run the npm build command (not used in our project)
+       # install pm2 so we can run our node.js
+      # based backend without blocking the terminal
+    - run: cd admin && npm install
+    - run: cd admin && npm run build
+      # install newman globally so we can run
+      # postman collections
+      # run our api tests
+    - run: npm install -g pm2 
+    - run: cd schedule-data-service && npm install 
+    - run: cd schedule-data-service && pm2 start "node index"
+    - run: cd api_test && npm install -g newman && newman run Teacher_CRUD.postman_collection.json
+
+  deploy:
+    name: "Deploy dev to dev"
+    needs: [api-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/dev.key
+          chmod 600 ~/.ssh/dev.key
+          cat >>~/.ssh/config <<END
+          Host dev
+            HostName $SSH_HOST
+            User $SSH_USER
+            Port $SSH_PORT
+            IdentityFile ~/.ssh/dev.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}          
+
+      - name: Deploy from dev 
+        run: ssh dev 'cd dev/ && git fetch && git pull origin test && npm install'
+
+      - name: Restart app 
+        run: ssh dev 'pm2 restart test_run' 
+
+
