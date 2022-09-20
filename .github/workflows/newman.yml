@@ -25,6 +25,7 @@ jobs:
     # run the npm build command (not used in our project)
        # install pm2 so we can run our node.js
       # based backend without blocking the terminal
+    - run: npm run build --if-present
     - run: cd admin && npm install
     - run: cd admin && npm run build
       # install newman globally so we can run
