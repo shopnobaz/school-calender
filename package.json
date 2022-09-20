@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cd schedule-data-service && node index",
-    "init-adm": "cd admin && npm install && npm run build",
+    "init-adm": "cd admin && npm install && vite build",
     "init-sds": "cd schedule-data-service && npm install && node index",
     "cy-test": "npx cypress open",
     "init-newman": "cd api_test && npm install -g newman && newman run Teacher_CRUD.postman_collection.json"
