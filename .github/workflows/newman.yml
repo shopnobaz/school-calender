@@ -2,7 +2,7 @@ name: Run Newman
 
 on:
   push:
-    branches: [master]
+    branches: [dev]
  
 jobs:
 
@@ -22,10 +22,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm install -g newman
-    - run: cd admin && npm install
-    - run: cd admin && npm run build
-    - run: cd schedule-data-service && npm install 
-    - run: npm install -g pm2
-    - run: cd schedule-data-service && pm2 start "node index"
-    - run: newman run api_test/Teacher_CRUD.postman_collection.json
+    # run the npm build command (not used in our project)
+    - run: npm run build --if-present
+       # install pm2 so we can run our node.js
+      # based backend without blocking the terminal
+    - run: npm run init-adm
+      # install newman globally so we can run
+      # postman collections
+      # run our api tests
+    - run: npm run init-sds & npm run init-newman
