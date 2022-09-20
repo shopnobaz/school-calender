@@ -23,7 +23,8 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm install -g newman
-    - run: cd admin && npm install && npm run build
+    - run: cd admin && npm install
+    - run: cd admin && npm run build
     - run: cd schedule-data-service && npm install 
     - run: npm install -g pm2
     - run: cd schedule-data-service && pm2 start "node index"
