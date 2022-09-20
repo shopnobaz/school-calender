@@ -1,0 +1,31 @@
+name: Run Newman
+
+on:
+  push:
+    branches: [main]
+ 
+jobs:
+
+  api-test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+ 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm install -g newman
+    - run: cd admin && npm install
+    - run: cd admin && npm run build
+    - run: cd schedule-data-service && npm install 
+    - run: npm install -g pm2
+    - run: cd schedule-data-service && pm2 start "node index"
+    - run: newman run api_test/Teacher_CRUD.postman_collection.json
