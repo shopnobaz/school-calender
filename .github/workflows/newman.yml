@@ -25,10 +25,11 @@ jobs:
     # run the npm build command (not used in our project)
        # install pm2 so we can run our node.js
       # based backend without blocking the terminal
-    - run: npm run build --if-present
     - run: cd admin && npm install
     - run: cd admin && npm run build
       # install newman globally so we can run
       # postman collections
       # run our api tests
-    - run: npm run init-sds & npm run init-newman   
+    - run: cd schedule-data-service && npm install 
+    - run: cd schedule-data-service && node index
+    - run: cd api_test && npm install -g newman && newman run Teacher_CRUD.postman_collection.json
