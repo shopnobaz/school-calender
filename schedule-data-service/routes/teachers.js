@@ -23,6 +23,7 @@ module.exports = function (server, db) {
     response.json(result)
   })
 
+
   // komplettera profil för användare
   server.put('/data/teachers', (request, response) => {
     let user = request.body
@@ -34,6 +35,8 @@ module.exports = function (server, db) {
     }
     response.json(result)
   })
+
+
 
   // begär ändring av lösenord för användare
   server.delete('/data/teachers/password', (request, response) => {
@@ -47,6 +50,7 @@ module.exports = function (server, db) {
     response.json(result)
   })
 
+
   // ändra lösenord för användare
   server.patch('/data/teachers/password', (request, response) => {
     let user = request.body
@@ -59,4 +63,6 @@ module.exports = function (server, db) {
     }
     response.json(result)
   })
+
+
 }

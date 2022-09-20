@@ -33,23 +33,44 @@
     ]
   },
   {
-    "route": "/data/schools",
+    "route": "/data/schools*",
     "roles": [
       {
         "role": "user",
         "methods": [
-          "GET"
+          "GET",
+          "POST",
+          "PUT"
+        ]
+      },
+      {
+        "role": "admin",
+        "methods": [
+          "GET",
+          "PUT",
+          "POST",
+          "DELETE"
         ]
       }
     ]
   },
   {
-    "route": "/data/classes",
+    "route": "/data/classes*",
     "roles": [
       {
         "role": "user",
         "methods": [
-          "GET"
+          "GET",
+          "POST"
+        ]
+      },
+      {
+        "role": "admin",
+        "methods": [
+          "GET",
+          "PUT",
+          "POST",
+          "DELETE"
         ]
       }
     ]
@@ -73,11 +94,20 @@
         "methods": [
           "GET"
         ]
+      },
+      {
+        "role": "admin",
+        "methods": [
+          "GET",
+          "PUT",
+          "POST",
+          "DELETE"
+        ]
       }
     ]
   },
   {
-    "route": "/data/teachers",
+    "route": "/data/teachers*",
     "roles": [
       {
         "role": "user",
